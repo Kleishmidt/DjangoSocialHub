@@ -1,0 +1,97 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <article class="media content-section">
+        <div class="row">
+            <div class="col-md-2">
+                <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+            </div>
+            <div class="col-md-10">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <a class="mr-2" href="{% url 'profile' post.author.profile.id %}">{{ post.author }}</a>
+                        <small class="text-muted">{{ post.created_at|date:"F d, Y" }}</small>
+                        {% if post.author == user %}
+                            <div>
+                                <button class="btn btn-secondary btn-sm mt-1 mb-1 update-btn"
+                                        data-pk="{{ post.pk }}">Update
+                                </button>
+                                <button class="btn btn-danger btn-sm mt-1 mb-1 delete-btn"
+                                        data-pk="{{ post.pk }}">Delete
+                                </button>
+                            </div>
+                        {% endif %}
+                        <img class="article-img h-100 w-100" src="{{ post.image.url }}">
+                    </div>
+                    <p class="article-content">{{ post.content }}</p>
+                    <p style="color:red;">Likes {{ post.likes.all.count }}</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value="{{ post.pk }}">
+                        {% if user in post.likes.all %}
+                            <button class="btn btn-info btn-sm mt-1 mb-1"
+                                    name="action" value="unlike" type="submit">Unlike
+                            </button>
+                        {% else %}
+                            <button class="btn btn-info btn-sm mt-1 mb-1"
+                                    name="action" value="like" type="submit">Like
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+    </article>
+
+    <!-- Delete Form -->
+    <div class="delete-form" style="display: none;">
+        <form id="delete-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <h2>Are you sure you want to delete this post?</h2>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" name="action" value="delete" type="submit">Yes, delete</button>
+                <button class="btn btn-outline-secondary cancel-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Update Form -->
+    <div class="update-form" style="display: none;">
+        <form id="update-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Update Post</legend>
+                {{ form | crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" name="action" value="update" type="submit">Submit</button>
+                <button class="btn btn-outline-secondary cancel-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Show delete form when delete button is clicked
+            $(".delete-btn").on("click", function () {
+                $(".delete-form").show();
+            });
+
+            // Show update form when update button is clicked
+            $(".update-btn").on("click", function () {
+                $(".content-section").hide();
+                $(".update-form").show();
+            });
+
+            // Cancel button functionality
+            $(".cancel-btn").on("click", function (event) {
+                event.preventDefault();
+                $(".delete-form").hide();
+                $(".update-form").hide();
+                $(".content-section").show();
+            });
+        });
+    </script>
+{% endblock content %}

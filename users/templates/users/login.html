@@ -1,0 +1,40 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% load socialaccount %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Log In</legend>
+                {{ form | crispy }}
+            </fieldset>
+            <br>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Login</button>
+            </div>
+        </form>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-lg btn-auth btn-block text-uppercase btn-outline" href="{% provider_login_url 'google' %}">
+                    <img src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a class="btn btn-lg btn-auth btn-block text-uppercase btn-outline" href="{% provider_login_url 'github' %}">
+                    <img class="github-logo" src="https://www.freepnglogos.com/uploads/512x512-logo-png/512x512-logo-github-icon-35.png">
+                    Signup Using GitHub
+                </a>
+            </div>
+        </div>
+
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
+            </small>
+        </div>
+    </div>
+
+
+{% endblock content %}
