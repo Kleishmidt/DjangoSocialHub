@@ -25,19 +25,21 @@
                     </div>
                     <p class="article-content">{{ post.content }}</p>
                     <p style="color:red;">Likes {{ post.likes.all.count }}</p>
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="post_id" value="{{ post.pk }}">
-                        {% if user in post.likes.all %}
-                            <button class="btn btn-info btn-sm mt-1 mb-1"
-                                    name="action" value="unlike" type="submit">Unlike
-                            </button>
-                        {% else %}
-                            <button class="btn btn-info btn-sm mt-1 mb-1"
-                                    name="action" value="like" type="submit">Like
-                            </button>
-                        {% endif %}
-                    </form>
+                    {% if user.is_authenticated %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.pk }}">
+                            {% if user in post.likes.all %}
+                                <button class="btn btn-info btn-sm mt-1 mb-1"
+                                        name="action" value="unlike" type="submit">Unlike
+                                </button>
+                            {% else %}
+                                <button class="btn btn-info btn-sm mt-1 mb-1"
+                                        name="action" value="like" type="submit">Like
+                                </button>
+                            {% endif %}
+                        </form>
+                    {% endif %}
                 </div>
             </div>
     </article>

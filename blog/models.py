@@ -6,12 +6,20 @@ from django.urls import reverse
 from utils.exception_handling import handle_exception
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
 class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(default=datetime.utcnow, editable=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='images', default='default_image.png')
+    image = models.ImageField(upload_to='images', default='default_image')
     likes = models.ManyToManyField(User, related_name='like_posts')
+    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
 
     def __str__(self):
         return f'Post by {self.author.username}'

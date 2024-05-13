@@ -35,7 +35,7 @@ CLOUDINARY_STORAGE = {
 DEBUG = (settings['DEBUG_VALUE'] == 'True')
 ALLOWED_HOSTS = ['*']
 
-SITE_ID = 2
+SITE_ID = 3
 # Application definition
 
 INSTALLED_APPS = [
@@ -108,8 +108,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': settings["SQL_ENGINE"],
+        'NAME': settings["SQL_DATABASE"],
+        'USER': settings["SQL_USER"],
+        'PASSWORD': settings["SQL_PASSWORD"],
+        'HOST': settings["SQL_HOST"],
+        'PORT': settings["SQL_PORT"],
     }
 }
 
