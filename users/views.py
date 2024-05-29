@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import logout
 from allauth.socialaccount.models import SocialToken
-
+from django.contrib.auth.models import User
 from utils.exception_handling import handle_exception
 from blog.models import Post
 from .models import Profile
@@ -61,13 +62,21 @@ def update_profile(request, profile):
         return redirect(reverse('profile', args=[profile.id]))
 
 
-def profile(request, *args, **kwargs):
+def profile(request, *args, **kwargs, ):
+    user = request.user
     profile = Profile.objects.filter(pk=kwargs['pk']).first()
     posts = Post.objects.filter(author=profile.user).order_by('-created_at')
     followers = profile.followers.all
     follows = profile.user.following.count()
-    u_form = UserUpdateForm(instance=request.user)
-    p_form = ProfileUpdateForm(instance=request.user.profile)
+    u_form = UserUpdateForm(instance=user)
+    p_form = ProfileUpdateForm(instance=profile)
+    liked_posts = Post.objects.filter(likes=profile.user).order_by('-created_at')
+    filter_type = request.GET.get('filter', 'posted')
+    if filter_type == 'liked':
+        displayed_posts = liked_posts
+    else:
+        displayed_posts = posts
+
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'follow':
@@ -86,6 +95,23 @@ def profile(request, *args, **kwargs):
         'profile': profile,
         'followers': followers,
         'follows': follows,
+        'displayed_posts': displayed_posts,
+        'filter_type': filter_type,
     }
 
     return render(request, 'users/profile.html', context)
+
+
+@login_required
+def following_view(request):
+    profile = request.user.profile
+    followed_profiles = profile.user.following.all()
+    followed_users = followed_profiles.values_list('user', flat=True)
+    followed_posts = Post.objects.filter(author__in=followed_users)
+
+    print(followed_users)
+    context = {
+        'followed_posts': followed_posts,
+    }
+
+    return render(request, 'users/following.html', context)

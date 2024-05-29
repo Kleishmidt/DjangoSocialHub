@@ -1,40 +1,99 @@
-{% extends "blog/base.html" %}
-{% load crispy_forms_tags %}
-{% block content %}
-    {% load socialaccount %}
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Log In</legend>
-                {{ form | crispy }}
-            </fieldset>
-            <br>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Login</button>
-            </div>
-        </form>
-        <br>
-        <div class="row">
-            <div class="col-md-6">
-                <a class="btn btn-lg btn-auth btn-block text-uppercase btn-outline" href="{% provider_login_url 'google' %}">
-                    <img src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google
-                </a>
-            </div>
-            <div class="col-md-6">
-                <a class="btn btn-lg btn-auth btn-block text-uppercase btn-outline" href="{% provider_login_url 'github' %}">
-                    <img class="github-logo" src="https://www.freepnglogos.com/uploads/512x512-logo-png/512x512-logo-github-icon-35.png">
-                    Signup Using GitHub
-                </a>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/css/index.css' %}">
+    {% if title %}
+        <title>DjangoSocialHub - {{ title }}</title>
+    {% else %}
+        <title>DjangoSocialHub</title>
+    {% endif %}
+</head>
+<body>
+<header class="site-header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+            <a class="navbar-brand mr-4" href="{% url 'blog-home' %}">DjangoSocialHub</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="{% url 'blog-home' %}">Home</a>
+                    <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+                </div>
+                <!-- Navbar Right Side -->
+                <div class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'post-create' %}">New Post</a>
+                        <a class="nav-item nav-link" href="{% url 'profile' user.profile.id %}">Profile</a>
+                        <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                    {% else %}
+                        <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
-        <br>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
-            </small>
+    </nav>
+</header>
+<main role="main" class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 mx-auto">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% load crispy_forms_tags %}
+            {% block content %}
+                {% load socialaccount %}
+                <div class="content-section">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Log In</legend>
+                            {{ form | crispy }}
+                        </fieldset>
+                        <br>
+                        <div class="form-group">
+                            <button class="btn btn-outline-info" type="submit">Login</button>
+                        </div>
+                    </form>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a class="btn btn-lg btn-auth btn-block text-uppercase btn-outline"
+                               href="{% provider_login_url 'google' %}">
+                                <img src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a class="btn btn-lg btn-auth btn-block text-uppercase btn-outline"
+                               href="{% provider_login_url 'github' %}">
+                                <img class="github-logo"
+                                     src="https://www.freepnglogos.com/uploads/512x512-logo-png/512x512-logo-github-icon-35.png">
+                                Signup Using GitHub
+                            </a>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="border-top pt-3">
+                        <small class="text-muted">
+                            Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
+                        </small>
+                    </div>
+                </div>
+
+
+            {% endblock content %}
         </div>
     </div>
+</main>
 
-
-{% endblock content %}
+<script src="{% static 'blog/js/index.js' %}"></script>

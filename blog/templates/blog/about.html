@@ -1,8 +1,92 @@
-{% extends "blog/base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/css/index.css' %}">
+    {% if title %}
+        <title>DjangoSocialHub - {{ title }}</title>
+    {% else %}
+        <title>DjangoSocialHub</title>
+    {% endif %}
+</head>
+<body>
+<header class="site-header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+            <a class="navbar-brand mr-4" href="{% url 'blog-home' %}">DjangoSocialHub</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="{% url 'blog-home' %}">Home</a>
+                    <a class="nav-item nav-link" href="{% url 'following' %}">Following</a>
+                    <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+                </div>
+                <!-- Search bar -->
+                <form class="form-inline d-flex my-2 my-lg-0" method="get" action="{% url 'search' %}">
+                    <input class="form-control form-control-sm" type="search" placeholder="Search" aria-label="Search"
+                           name="q">
+                    <button class="btn btn-outline-light btn-sm my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                <!-- Navbar Right Side -->
+                <div class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'post-create' %}">New Post</a>
+                        <a class="nav-item nav-link" href="{% url 'profile' user.profile.id %}">Profile</a>
+                        <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                    {% else %}
+                        <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+<main role="main" class="container">
+    <div class="row justify-content-center"> <!-- Added justify-content-center -->
+        <div class="col-md-8 mx-auto"> <!-- Added mx-auto -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% load crispy_forms_tags %}
+            {% block content %}
+                <h1>About Page</h1>
+                <p>Welcome to DjangoSocialHub! DjangoSocialHub is a modern social network where you can express your
+                    emotions, share photos, and interact with other users. Our platform allows you to create personal
+                    accounts, publish posts, comment and respond to posts, and follow other users.</p>
 
-{% block content %}
-    <h1>About Page</h1>
-    <p>Welcome to DjangoSocialHub, modern social network where you can express emotions, share photos,
-        and interact with other users. Our platform allows you to create personal accounts,
-        publish posts, comment and respond to your own and other posts, and follow other users.</p>
-{% endblock content %}
+                <p><strong>Features:</strong></p>
+                <ul>
+                    <li><strong>Create Personal Accounts:</strong> Set up your profile to share information about
+                        yourself and connect with others.
+                    </li>
+                    <li><strong>Publish Posts:</strong> Share content, typically images with captions, on your timeline.
+                    </li>
+                    <li><strong>Comment and Respond:</strong> Engage with posts by commenting and reacting to them.</li>
+                    <li><strong>Follow Users:</strong> Stay updated with the latest posts from the users you follow.
+                    </li>
+                    <li><strong>Explore Content:</strong> Discover new and popular content through the Explore section.
+                    </li>
+                </ul>
+                <br>
+                <p>At DjangoSocialHub, we prioritize respectful and positive interactions, ensuring a safe and enjoyable
+                    environment for all users. Join us and be part of a vibrant community where you can connect, share,
+                    and explore!</p>
+            {% endblock content %}
+        </div>
+    </div>
+</main>
+
+
+<script src="{% static 'blog/js/index.js' %}"></script>
+</body>
+</html>

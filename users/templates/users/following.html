@@ -1,0 +1,54 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <h2>Posts from Users You Follow</h2>
+        {% for post in followed_posts %}
+            <article class="media content-section">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+                    </div>
+                    <div class="col-md-10">
+                        <div class="media-body">
+                            <div class="article-metadata">
+                                <a class="mr-2" href="{% url 'profile' post.author.profile.id %}">{{ post.author }}</a>
+                                <small class="text-muted">{{ post.created_at|date:"F d, Y" }}</small>
+                            </div>
+                            <img class="article-img h-100 w-100" src="{{ post.image.url }}">
+                            <a class="article-content" href="{% url 'post-detail' post.id %}">{{ post.content }}</a>
+                            <br>
+
+                            {% if user.is_authenticated %}
+                                <form method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="post_id" value="{{ post.pk }}">
+                                    {% if user in post.likes.all %}
+                                        <button class="btn btn-link" style="padding: 0; border: none;" name="action"
+                                                value="unlike" type="submit">
+                                            <i class="fas fa-heart" style="color: red; font-size: 24px;"></i>
+                                        </button>
+                                    {% else %}
+                                        <button class="btn btn-link" style="padding: 0; border: none;" name="action"
+                                                value="like" type="submit">
+                                            <i class="far fa-heart" style="color: gray; font-size: 24px;"></i>
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            {% endif %}
+
+                            {% if post.likes.all.count == 1 %}
+                                <span style="color:grey;"> {{ post.likes.all.count }} like</span>
+                            {% else %}
+                                <span style="color:grey;"> {{ post.likes.all.count }} likes</span>
+                            {% endif %}
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <p>You are not following any users or the users you follow have not made any posts yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

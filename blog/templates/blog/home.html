@@ -14,22 +14,33 @@
                         </div>
                         <img class="article-img h-100 w-100" src="{{ post.image.url }}">
                         <a class="article-content" href="{% url 'post-detail' post.id %}">{{ post.content }}</a>
-                        <p style="color:red;">Likes {{ post.likes.all.count }}</p>
+                        <br>
+
                         {% if user.is_authenticated %}
-                            <form method="post">
+                            <form method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="post_id" value="{{ post.pk }}">
                                 {% if user in post.likes.all %}
-                                    <button class="btn btn-info btn-sm mt-1 mb-1"
-                                            name="action" value="unlike" type="submit">Unlike
+                                    <button class="btn btn-link" style="padding: 0; border: none;" name="action"
+                                            value="unlike" type="submit">
+                                        <i class="fas fa-heart" style="color: red; font-size: 24px;"></i>
                                     </button>
                                 {% else %}
-                                    <button class="btn btn-info btn-sm mt-1 mb-1"
-                                            name="action" value="like" type="submit">Like
+                                    <button class="btn btn-link" style="padding: 0; border: none;" name="action"
+                                            value="like" type="submit">
+                                        <i class="far fa-heart" style="color: gray; font-size: 24px;"></i>
                                     </button>
                                 {% endif %}
                             </form>
                         {% endif %}
+
+                        {% if post.likes.all.count == 1 %}
+                        <span style="color:grey;"> {{ post.likes.all.count }} like</span>
+                    {% else %}
+                        <span style="color:grey;"> {{ post.likes.all.count }} likes</span>
+                    {% endif %}
+                    <br>
+                    <br>
                     </div>
                 </div>
             </div>

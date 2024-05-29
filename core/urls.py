@@ -18,8 +18,8 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from users import views as user_views
 from django.contrib.auth.decorators import login_required
+from users import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +27,7 @@ urlpatterns = [
     path('profile/<int:pk>/', login_required(user_views.profile), name='profile'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', user_views.custom_logout, name='logout'),
+    path('following/', user_views.following_view, name='following'),
     path('accounts/', include('allauth.urls')),
     path('', include('blog.urls')),
 ]
