@@ -5,6 +5,14 @@ like and comment on posts, follow other users, and search posts by tags and othe
 
 ## Installation
 
+Follow these steps to set up DjangoSocialHub on your local machine.
+
+### Prerequisites
+
+Make sure you have the following installed on your system:
+- [Git](https://git-scm.com/)
+- [Docker](https://www.docker.com/)
+
 1. Clone the repository:
 
 ```sh
@@ -22,7 +30,7 @@ git clone https://github.com/Kleishmidt/DjangoSocialHub.git
    docker-compose up --build --remove-orphans
 ```
 
-4.Once the containers are up and running, you can access the DjangoSocialHub application in your web browser at:
+4. Once the containers are up and running, you can access the DjangoSocialHub application in your web browser at:
 ```sh
    http://localhost:8000
 ```
