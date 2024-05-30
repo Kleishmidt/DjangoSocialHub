@@ -25,6 +25,12 @@
                     <a class="nav-item nav-link" href="{% url 'blog-home' %}">Home</a>
                     <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
                 </div>
+                <!-- Search bar -->
+                <form class="form-inline d-flex my-2 my-lg-0" method="get" action="{% url 'search' %}">
+                    <input class="form-control form-control-sm" type="search" placeholder="Search" aria-label="Search"
+                           name="q">
+                    <button class="btn btn-outline-light btn-sm my-2 my-sm-0" type="submit">Search</button>
+                </form>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}

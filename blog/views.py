@@ -14,7 +14,7 @@ class PostListView(ListView):
     template_name = 'blog/home.html'
     context_object_name = 'posts'
     ordering = ['-created_at']
-    paginate_by = 5
+    paginate_by = 4
 
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('post_id')
